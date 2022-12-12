@@ -1,23 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import MainNav from "./components/MainNav";
+import { useEffect } from "react";
+import logo from "./logo.svg";
+import "./App.css";
 
 function App() {
+  const [shoeData, setShoeData] = useState([]);
+  //get some data
+  useEffect(() => {
+    const client_id = "rLq9bvi_8PHd4HDf1G24bOnATPnByqoMjRtvGbFxMf0";
+    const searchStr = "shoes";
+    const resource = `https://api.unsplash.com/search/photos?query=${searchStr}&per_page=2&client_id=${client_id}`;
+
+    fetch(resource)
+      .then((res) => res.json())
+      .then((data) => {
+        setShoeData(data.results);
+      });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {/* Add a navbar*/}
+      <MainNav />
+      {/*Add card container */}
+      <div className="card-container">
+        {shoeData.map((data, index) => (
+          <p key={index}>{data.title}</p>
+        ))}
+      </div>
     </div>
   );
 }
